@@ -1,5 +1,5 @@
 
-//* Importation des bibliothèques*//
+//* Loading libraries *//
 #define USE_ARDUINO_INTERRUPTS true 
 #include <PulseSensorPlayground.h>        
 //*******************************//
@@ -7,40 +7,40 @@
 //*************************************************************** Variables ***************************************************************//
 //* Entrée du capteur *//
 const int PulseWire = 0;
-//* LED qui s'allume lors de la détection d'un battement cardiaque *//       
+//* A LED connect to this pin will light on each time a heartbeat is detect *//       
 const int HB = 13;   
-//* Seuil à partir duquel on considère l'information comme un signal cardiaque (elle vaut 550 par défaut). Elle peut être modifiée  *//     
+//* If the signal if above this threshold, we consider it as a ECG Signal *//     
 int Threshold = 550;    
 //******************************************************************************************************************************************//
 
-//************************************************** Initialisation **************************************************//
-//* Creation d'une instance de détection de pulsation *//                              
+//************************************************** Initialization **************************************************//
+//* Creation of a pulse sensor instance *//                              
 PulseSensorPlayground pulseSensor;  
 
 void setup() {   
-  //* Initialisation du port série *//
+  //* Initialization of serial port  *//
   Serial.begin(9600);          
-  //* Configuration du détecteur de pulsation *//
+  //* Configuration of the pulse sensor *//
   pulseSensor.analogInput(PulseWire); 
-  //* Initialisation de la LED *//  
+  //* Initialization of the  LED *//  
   pulseSensor.blinkOnPulse(HB);    
-  //* Initialisation du seuil *//
+  //* Initialization of the threshold *//
   pulseSensor.setThreshold(Threshold);  
-  //* Envoi d'un message de démarrage après vérification *//
+
   if (pulseSensor.begin()) {
-    Serial.println("Initialisation du moniteur cardiaque !");
+    Serial.println("Heartbeat monitor initialization !");
   }
 }
 //********************************************************************************************************************//
 
-//*********************** Programme principal ***********************//
+//*********************** Main program ***********************//
 void loop() {
-  //* Récupération du nombre de battement par minute *//
+  //* Get heartbeat per minute*//
   int myBPM = pulseSensor.getBeatsPerMinute();  
- //* Vérification de la détection d'un battement *//
+ //* Check if a heartbeat is detect *//
   if (pulseSensor.sawStartOfBeat()) {             
-    Serial.println("Battement detecte ! ");      
- //* Affichage de la valeur du battement sur le port série *// 
+    Serial.println("Heartbeat detect ! ");      
+ //* Display value *// 
     Serial.print("BPM: ");                     
     Serial.println(myBPM);                        
 }
